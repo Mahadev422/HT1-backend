@@ -28,4 +28,4 @@ class QueryRequest(BaseModel):
 
 @app.post("/query")
 async def post_query(data: QueryRequest):
-    return {"query_received": "Success"}
+    return {"response": "Success"}
