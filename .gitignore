@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+*.venv
+env/
+venv/
+ENV/
+VENV/
+.venv/
+env.bak/
+venv.bak/
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+.env.*
+
+# VSCode settings
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+# MyPy
+.mypy_cache/
+
+# Pydantic / FastAPI generated cache
+__pydantic_cache__/
+
+# Other tools
+*.egg-info/
+dist/
+build/
