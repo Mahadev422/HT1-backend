@@ -1,23 +1,33 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-import os
+from fastapi.responses import JSONResponse
+import os, json, shutil
+import faiss, fitz
 from uuid import uuid4
-import asyncio
+#local file
+from app.models.pdf_upload import chunk_text, embed_chunks, pdf_text_extract
 
-UPLOAD_DIR = "uploaded_pdfs"
+
+UPLOAD_DIR = "data"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-router = APIRouter()
+upload_router = APIRouter()
 
-@router.post("/pdf")
-async def upload_pdf(file: UploadFile = File(...)):
-    if not file.filename.endswith(".pdf"):
-        raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
+@upload_router.post("/pdf")
+async def extract_text(file: UploadFile = File(...)):
+    # Create a temporary unique filename
+    id = uuid4()
+    temp_filename = f"{id}.pdf"
+    text = pdf_text_extract(temp_filename=temp_filename, file=file)
+    chunks = chunk_text(text=text)
+    vectors = embed_chunks(chunks=chunks)
+    index = faiss.IndexFlatL2(384)
+    index.add(vectors)
     
-    filename = f"{uuid4()}.pdf"
-    file_path = os.path.join(UPLOAD_DIR, filename)
+    INDEX_FILE = os.path.join(UPLOAD_DIR, f"faiss/{id}.faiss")
+    META_FILE = os.path.join(UPLOAD_DIR, f"json/{id}.json")
+    faiss.write_index(index, INDEX_FILE)
+    with open(META_FILE, "w") as f:
+        json.dump({"chunks": chunks}, f)
 
-    with open(file_path, "wb") as buffer:
-        content = await file.read()
-        buffer.write(content)
-    await asyncio.sleep(5)
-    return {"filename": filename, "message": "Upload successful"}
+    return {"id": id, "message": "Uploaded Successfully"}
+

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app.routes.upload import router
-from pydantic import BaseModel
+from app.routes.upload import upload_router
+from app.routes.query import query_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -21,11 +21,5 @@ app.add_middleware(
 def hello():
   return {"message": "Successfully"}
 
-app.include_router(router=router, prefix='/upload', tags=['upload'])
-
-class QueryRequest(BaseModel):
-    query: str
-
-@app.post("/query")
-async def post_query(data: QueryRequest):
-    return {"response": "Success"}
+app.include_router(router=upload_router, prefix='/upload', tags=['upload'])
+app.include_router(router=query_router, prefix='/query', tags=['query'])
