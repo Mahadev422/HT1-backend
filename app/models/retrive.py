@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-genai = ChatGoogleGenerativeAI( model='gemini-2.5-flash', temperature=0.7)
+genai = ChatGoogleGenerativeAI(google_api_key="AIzaSyDWdWOBveuDAQaPdT8Bdcx0yWpHAkAbm08", model='gemini-2.5-flash', temperature=0.7)
 
 DATA_FOLDER = "data"
 os.makedirs(DATA_FOLDER, exist_ok=True)
