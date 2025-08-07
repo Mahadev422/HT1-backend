@@ -3,10 +3,11 @@ import faiss
 import json
 from langchain_google_genai import ChatGoogleGenerativeAI
 from sentence_transformers import SentenceTransformer
+from dotenv import load_dotenv
 
-# === CONFIG ===
-GOOGLE_API_KEY = "AIzaSyCO3C4hhry7CF8g18cwKPbQTrDpLqGd-Q8"
-genai = ChatGoogleGenerativeAI(google_api_key=GOOGLE_API_KEY, model='gemini-2.5-flash', temperature=0.7)
+load_dotenv()
+
+genai = ChatGoogleGenerativeAI( model='gemini-2.5-flash', temperature=0.7)
 
 DATA_FOLDER = "data"
 os.makedirs(DATA_FOLDER, exist_ok=True)
