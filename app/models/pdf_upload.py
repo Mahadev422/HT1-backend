@@ -1,7 +1,6 @@
 import os, shutil, asyncio
 import fitz
 from fastapi import UploadFile, File, HTTPException
-from fastapi.responses import JSONResponse
 from langchain_google_genai import ChatGoogleGenerativeAI
 from sentence_transformers import SentenceTransformer
 
