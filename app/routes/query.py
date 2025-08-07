@@ -17,7 +17,6 @@ async def post_query(data: QueryRequest):
     query = data.query
     id = data.id
     chat_history = data.chats
-    print(data)
     if not id or not query:
         return {"messages": "Please upload pdf"}
     relevant_chunks = search_memory(question=query, k=3, id=id)

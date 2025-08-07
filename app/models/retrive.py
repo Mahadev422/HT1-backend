@@ -3,8 +3,6 @@ import faiss
 import json
 from langchain_google_genai import ChatGoogleGenerativeAI
 from sentence_transformers import SentenceTransformer
-from langchain.schema import HumanMessage, AIMessage, SystemMessage
-from langchain.prompts import ChatPromptTemplate
 
 # === CONFIG ===
 GOOGLE_API_KEY = "AIzaSyCO3C4hhry7CF8g18cwKPbQTrDpLqGd-Q8"
@@ -41,35 +39,10 @@ def search_memory(question: str, k: int, id: str):
 
 from langchain.schema import HumanMessage, AIMessage
 
-def convert_to_langchain_messages(messages: list):
-    converted = []
-    for msg in messages:
-        text = msg.text
-        role = msg.role
 
-        if role == "user":
-            converted.append(HumanMessage(content=text))
-        elif role == "bot":
-            converted.append(AIMessage(content=text))
-        else:
-            raise ValueError(f"Unknown sender type: {role}")
-
-    return converted
-  
 
 def ask_gemini(question: str, context_chunks, chat_history: list):
 
-    # prompt = ChatPromptTemplate([
-    #     SystemMessage('''
-    #     You are an AI assistant for question-answering tasks and friendly messages. Use the following pieces of retrieved context to answer the question.
-    #     If you don't know the answer based on the context, then answer it by yourself.
-    #     Use three sentences maximum and keep the answer concise.
-        
-    #     Question: {question}
-    #     Context: {context_chunks}
-    # '''),
-
-    # ])
     prompt = f'''
         You are an AI assistant for question-answering tasks and friendly messages. Use the following pieces of retrieved context to answer the question.
         If you don't know the answer based on the context, then answer it by yourself.
@@ -78,9 +51,6 @@ def ask_gemini(question: str, context_chunks, chat_history: list):
         Question: {question}
         Context: {context_chunks}
     '''
-    p = ChatPromptTemplate.from_template(prompt)
-    #messages = convert_to_langchain_messages(messages=chat_history)
-    #genai(messages=messages)
     response = genai.invoke(prompt).content
     return response
 
