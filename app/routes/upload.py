@@ -1,6 +1,5 @@
 from fastapi import APIRouter, UploadFile, File
-import os, json, shutil
-import faiss, fitz
+import fitz
 from uuid import uuid4
 from io import BytesIO
 #local file

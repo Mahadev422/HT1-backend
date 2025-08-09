@@ -1,7 +1,8 @@
 uvicorn
 fastapi
-langchain-google-genai
+gooogle-genai
 sentence-transformers
 PyMuPDF
 python-dotenv
 transformers
+pinecone
