@@ -1,6 +1,6 @@
 uvicorn
 fastapi
-gooogle-genai
+google-genai
 sentence-transformers
 PyMuPDF
 python-dotenv
