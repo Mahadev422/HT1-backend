@@ -3,7 +3,6 @@ from app.routes.upload import upload_router
 from app.routes.query import query_router
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from uuid import uuid4, os, uvicorn
 #local function
 from app.models.helpers import extract_text_from_pdf_url
 from app.models.pinecone_db import upsert_large_document, search_query_from_index
@@ -37,7 +36,6 @@ async def hackrx(data: hackrxRequest):
   questions = data.questions
   text = extract_text_from_pdf_url(pdf_url=data.documents)
   data = await upsert_large_document(text=text, index_name=index_name)
-  print('2')
   
   if not data:
     return {"message": "failed to save pdf"}
