@@ -2,30 +2,25 @@ from fastapi import APIRouter, UploadFile, File
 import os, json, shutil
 import faiss, fitz
 from uuid import uuid4
+from io import BytesIO
 #local file
-from app.models.pdf_upload import chunk_text, embed_chunks, pdf_text_extract
-
-UPLOAD_DIR = "data"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+from app.models.pinecone_db import upsert_large_document
 
 upload_router = APIRouter()
 
 @upload_router.post("/pdf")
 async def extract_text(file: UploadFile = File(...)):
     # Create a temporary unique filename
-    id = uuid4()
-    temp_filename = f"{id}.pdf"
-    text = pdf_text_extract(temp_filename=temp_filename, file=file)
-    chunks = chunk_text(text=text)
-    vectors = embed_chunks(chunks=chunks)
-    index = faiss.IndexFlatL2(384)
-    index.add(vectors)
-    
-    INDEX_FILE = os.path.join(UPLOAD_DIR, f"faiss/{id}.faiss")
-    META_FILE = os.path.join(UPLOAD_DIR, f"json/{id}.json")
-    faiss.write_index(index, INDEX_FILE)
-    with open(META_FILE, "w") as f:
-        json.dump({"chunks": chunks}, f)
+    id = str(uuid4())
+    file_bytes = await file.read()
+    text = extract_text_pdf(file_bytes=file_bytes)
 
-    return {"id": id, "message": "Uploaded Successfully"}
+    data = await upsert_large_document(text=text, index_name=id)
+    return id
 
+def extract_text_pdf(file_bytes: bytes):
+    text = ""
+    with fitz.open(stream=BytesIO(file_bytes), filetype="pdf") as doc:
+        for page in doc:
+            text += page.get_text()
+    return text
