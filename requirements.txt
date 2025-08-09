@@ -6,3 +6,4 @@ PyMuPDF
 python-dotenv
 transformers
 pinecone
+python-multipart

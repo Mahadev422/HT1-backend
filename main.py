@@ -3,7 +3,7 @@ from app.routes.upload import upload_router
 from app.routes.query import query_router
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from uuid import uuid4
+from uuid import uuid4, os, uvicorn
 #local function
 from app.models.helpers import extract_text_from_pdf_url
 from app.models.pinecone_db import upsert_large_document, search_query_from_index
@@ -50,3 +50,7 @@ async def hackrx(data: hackrxRequest):
 
 app.include_router(router=upload_router, prefix='/upload', tags=['upload'])
 app.include_router(router=query_router, prefix='/query', tags=['query'])
+
+if __name__ == "__main__":
+  port = 4000
+  uvicorn.run("main:app", host="0.0.0.0", port=port)
