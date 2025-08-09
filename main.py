@@ -50,7 +50,3 @@ async def hackrx(data: hackrxRequest):
 
 app.include_router(router=upload_router, prefix='/upload', tags=['upload'])
 app.include_router(router=query_router, prefix='/query', tags=['query'])
-
-if __name__ == "__main__":
-  port = 4000
-  uvicorn.run("main:app", host="0.0.0.0", port=port)
